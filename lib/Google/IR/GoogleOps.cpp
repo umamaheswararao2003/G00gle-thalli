@@ -38,8 +38,16 @@ void GoogleDialect::initialize() {
 #include "Google/IR/GoogleOps.cpp.inc"
 
 //===----------------------------------------------------------------------===//
-// ConstantOp Verification
+// ConstantOp Builder and Verification
 //===----------------------------------------------------------------------===//
+
+void ConstantOp::build(OpBuilder &builder, OperationState &state, Attribute value, Type resultType) {
+  state.addAttribute("value", value);
+  state.addTypes(resultType);
+}
+
+//===----------------------------------------------------------------------===//
+// ConstantOp Verification
 
 LogicalResult ConstantOp::verify() {
   auto valueAttr = getValue();
