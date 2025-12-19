@@ -3,6 +3,7 @@
 #include "mlir/IR/Dialect.h"
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/InitAllDialects.h"
+#include "mlir/InitAllExtensions.h"
 #include "mlir/InitAllPasses.h"
 #include "mlir/Pass/Pass.h"
 #include "mlir/Pass/PassManager.h"
@@ -33,6 +34,7 @@ int main(int argc, char **argv) {
   mlir::DialectRegistry registry;
   registry.insert<mlir::google::GoogleDialect>();
   mlir::registerAllDialects(registry);
+  mlir::registerAllExtensions(registry);
 
   mlir::google::registerGoogleToArithLoweringPass();
   mlir::google::registertranslationtoTosa();
