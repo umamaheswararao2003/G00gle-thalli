@@ -20,6 +20,7 @@
 
 #include "Google/Translation/GoogleToArith.h"
 #include "Google/Translation/GoogletoTosa.h"
+#include "Google/Translation/GoogleToLinalg.h"
 
 // namespace mlir {
 // namespace google {
@@ -38,6 +39,7 @@ int main(int argc, char **argv) {
 
   mlir::google::registerGoogleToArithLoweringPass();
   mlir::google::registertranslationtoTosa();
+  mlir::google::registerGoogleToLinalgLoweringPass();
 
   
   return mlir::asMainReturnCode(

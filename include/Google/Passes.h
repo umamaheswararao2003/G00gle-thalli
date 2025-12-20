@@ -7,6 +7,9 @@ namespace mlir::google {
 
 enum class TilingLevel { Parallel, Reduction };
 
+// Include lowering pass headers
+#include "Google/Translation/GoogleToLinalg.h"
+
 #define GEN_PASS_DECL
 #include "Passes.h.inc"
 
