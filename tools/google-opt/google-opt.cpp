@@ -21,6 +21,7 @@
 #include "Google/Translation/GoogleToArith.h"
 #include "Google/Translation/GoogletoTosa.h"
 #include "Google/Translation/GoogleToLinalg.h"
+#include "Google/Pipelines/Pipelines.h"
 
 // namespace mlir {
 // namespace google {
@@ -40,6 +41,7 @@ int main(int argc, char **argv) {
   mlir::google::registerGoogleToArithLoweringPass();
   mlir::google::registertranslationtoTosa();
   mlir::google::registerGoogleToLinalgLoweringPass();
+  mlir::google::registerGooglePipelines();  // Register optimization pipelines
 
   
   return mlir::asMainReturnCode(

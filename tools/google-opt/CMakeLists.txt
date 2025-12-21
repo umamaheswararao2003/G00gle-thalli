@@ -13,6 +13,7 @@ target_link_libraries(google-opt
   ${conversion_libs}
   MLIRGoogleOps
   MLIRGoogleToArithTransforms
+  MLIRGooglePipelines
   MLIRFuncAllExtensions
   MLIRTensorAllExtensions
   MLIRTransformDialect
