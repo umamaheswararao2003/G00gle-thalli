@@ -20,6 +20,15 @@ void registerBasicPipeline();
 /// Register optimized pipeline (balanced performance)
 void registerOptimizedPipeline();
 
+/// Register extreme pipeline with L1 tiling
+void registerExtremePipelineL1();
+
+/// Register extreme pipeline with L1+L2 tiling
+void registerExtremePipelineL2();
+
+/// Register extreme pipeline with L1+L2 tiling (full with LLVM lowering)
+void registerExtremePipelineL2Full();
+
 /// Register extreme pipeline (maximum performance)
 void registerExtremePipeline();
 

@@ -10,6 +10,7 @@ add_mlir_library(MLIRGooglePipelines
   MLIRLinalgTransforms
   MLIRMemRefTransforms
   MLIRSCFTransforms
+  MLIRTransformDialect
   MLIRPass
   MLIRTransforms
 )
