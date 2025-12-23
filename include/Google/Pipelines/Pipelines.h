@@ -29,6 +29,12 @@ void registerExtremePipelineL2();
 /// Register extreme pipeline with L1+L2 tiling (full with LLVM lowering)
 void registerExtremePipelineL2Full();
 
+/// Register extreme pipeline with L1+L2+L3 tiling
+void registerExtremePipelineL3();
+
+/// Register extreme pipeline with L1+L2+L3 tiling (full with LLVM lowering)
+void registerExtremePipelineL3Full();
+
 /// Register extreme pipeline (maximum performance)
 void registerExtremePipeline();
 

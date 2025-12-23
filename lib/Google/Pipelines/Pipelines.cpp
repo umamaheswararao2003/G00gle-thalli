@@ -180,6 +180,70 @@ void registerExtremePipelineL2Full() {
 }
 
 //===----------------------------------------------------------------------===//
+// Extreme Pipeline L3 - L1+L2+L3 Cache Tiling (Minimal)
+//===----------------------------------------------------------------------===//
+
+void registerExtremePipelineL3() {
+  PassPipelineRegistration<>(
+    "google-extreme-l3",
+    "Extreme pipeline with L1+L2+L3 cache tiling (L3: 256, L2: 64, L1: 16)",
+    [](OpPassManager &pm) {
+      // Phase 1: Lower Google to Linalg
+      pm.addPass(createGoogleToLinalgLoweringPass());
+      
+      // Phase 2: FUSION (critical - must happen before tiling)
+      pm.addNestedPass<func::FuncOp>(createLinalgElementwiseOpFusionPass());
+      
+      // Phase 3: L1+L2+L3 TILING via Transform Dialect
+      pm.addPass(mlir::transform::createInterpreterPass());
+      
+      // STOP HERE - minimal pipeline to verify 3-level tiling
+    });
+}
+
+//===----------------------------------------------------------------------===//
+// Extreme Pipeline L3 Full - Complete L1+L2+L3 Tiling with LLVM Lowering
+//===----------------------------------------------------------------------===//
+
+void registerExtremePipelineL3Full() {
+  PassPipelineRegistration<>(
+    "google-extreme-l3-full",
+    "Complete extreme pipeline with L1+L2+L3 tiling and LLVM lowering",
+    [](OpPassManager &pm) {
+      // Phase 1: Lower Google to Linalg
+      pm.addPass(createGoogleToLinalgLoweringPass());
+      
+      // Phase 2: FUSION (critical - must happen before tiling)
+      pm.addNestedPass<func::FuncOp>(createLinalgElementwiseOpFusionPass());
+      
+      // Phase 3: L1+L2+L3 TILING via Transform Dialect
+      pm.addPass(mlir::transform::createInterpreterPass());
+      
+      // Phase 4: Generalize named ops for further optimization
+      pm.addNestedPass<func::FuncOp>(createLinalgGeneralizeNamedOpsPass());
+      
+      // Phase 5: Bufferization
+      pm.addPass(bufferization::createOneShotBufferizePass());
+      
+      // Phase 6: Lower to affine for loop optimization
+      pm.addNestedPass<func::FuncOp>(createConvertLinalgToAffineLoopsPass());
+      
+      // Affine optimizations
+      pm.addNestedPass<func::FuncOp>(affine::createLoopFusionPass());
+      pm.addNestedPass<func::FuncOp>(affine::createLoopCoalescingPass());
+      
+      // Lower affine
+      pm.addPass(createLowerAffinePass());
+      
+      // Phase 7: Lower to LLVM
+      pm.addPass(createConvertFuncToLLVMPass());
+      pm.addPass(createArithToLLVMConversionPass());
+      pm.addPass(createFinalizeMemRefToLLVMConversionPass());
+      pm.addPass(createReconcileUnrealizedCastsPass());
+    });
+}
+
+//===----------------------------------------------------------------------===//
 // Extreme Pipeline - Maximum Performance with Fusion and Coalescing
 //===----------------------------------------------------------------------===//
 
@@ -230,6 +294,8 @@ void registerGooglePipelines() {
   registerExtremePipelineL1();
   registerExtremePipelineL2();
   registerExtremePipelineL2Full();
+  registerExtremePipelineL3();
+  registerExtremePipelineL3Full();
 }
 
 } // namespace google
