@@ -3,6 +3,7 @@
 #include "mlir/IR/Dialect.h"
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/InitAllDialects.h"
+#include "mlir/InitAllExtensions.h"
 #include "mlir/InitAllPasses.h"
 #include "mlir/Pass/Pass.h"
 #include "mlir/Pass/PassManager.h"
@@ -19,6 +20,8 @@
 
 #include "Google/Translation/GoogleToArith.h"
 #include "Google/Translation/GoogletoTosa.h"
+#include "Google/Translation/GoogleToLinalg.h"
+#include "Google/Pipelines/Pipelines.h"
 
 // namespace mlir {
 // namespace google {
@@ -33,9 +36,12 @@ int main(int argc, char **argv) {
   mlir::DialectRegistry registry;
   registry.insert<mlir::google::GoogleDialect>();
   mlir::registerAllDialects(registry);
+  mlir::registerAllExtensions(registry);
 
   mlir::google::registerGoogleToArithLoweringPass();
   mlir::google::registertranslationtoTosa();
+  mlir::google::registerGoogleToLinalgLoweringPass();
+  mlir::google::registerGooglePipelines();  // Register optimization pipelines
 
   
   return mlir::asMainReturnCode(
